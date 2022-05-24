@@ -1,18 +1,29 @@
-# OSU Benchmark
+## OSU Benchmark
 
 This is a document for OSU Benchmark.
 
-# Docker Image
+## Docker Image
+
+### Intel MPI
 
 ```bash
 cd /home/sleong/sandbox/docker-hpc-micro-benchmark/
 docker build --tag registry.gsc.wustl.edu/sleong/osu-micro-benchmark:oneapi .
 ```
 
-# Test
+### CUDA and OpenMPI
+
+Shown below is an example to build Docker image for OSU benchmark with OpenMPI and CUDA.
+
+```bash
+cd /home/sleong/sandbox/docker-hpc-micro-benchmark/
+docker build --tag registry.gsc.wustl.edu/sleong/osu-micro-benchmark:openmpi-cuda-ofed -f Dockerfile.openmpi-cuda-lsf .
+```
+
+## Test
 
 
-## osu_get_latency - Latency Test
+### osu_get_latency - Latency Test
 
 1. Create a bsub batch file as shown below. For my example,  I named it `osu_get_latency.bsub`.
    ```bash
@@ -34,7 +45,7 @@ docker build --tag registry.gsc.wustl.edu/sleong/osu-micro-benchmark:oneapi .
    LSF_DOCKER_NETWORK=host LSF_DOCKER_IPC=host LSF_DOCKER_SHM_SIZE=20G bsub < osu_get_latency.bsub
    ```
 
-## osu_get_bw - Bandwidth Test
+### osu_get_bw - Bandwidth Test
 
 1. Create a bsub batch file as shown below. For my example,  I named it `osu_get_bw.bsub`.
    ```bash
