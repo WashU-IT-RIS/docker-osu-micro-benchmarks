@@ -68,3 +68,12 @@ docker build --tag registry.gsc.wustl.edu/sleong/osu-micro-benchmark:openmpi-cud
    ```
 
 
+## Helper
+
+There is one helper script in ./bin directory.  Shown below are instructions on running the script.
+
+1. Determine OSU benchmark program to run.
+2. Run a test.  Shown below is an example command.
+   ```bash
+   QUEUE=subscription bin/osu-test.sh osu_gather -G compute-ris
+   ```

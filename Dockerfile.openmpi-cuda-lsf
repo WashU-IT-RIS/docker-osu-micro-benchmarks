@@ -81,13 +81,14 @@ RUN apt-get update -qq \
 ARG MPI_VERSION="4.0.2"
 ARG MPI_CONFIGURE_OPTIONS="--enable-fast=all,O3 --prefix=/usr --with-cuda=/usr/local/cuda --with-lsf=/opt/ibm/lsfsuite/lsf/10.1/ --enable-orterun-prefix-by-default --with-lsf-libdir=/opt/ibm/lsfsuite/lsf/10.1/linux2.6-glibc2.3-x86_64/lib/ --with-ucx=/usr --enable-mca-no-build=btl-uct"
 ARG MPI_MAKE_OPTIONS="-j4"
-
+COPY ./0001-OPAL-MCA-BTL-OPENIB-Detect-ConnectX-6-HCAs.patch /tmp/
 RUN mkdir -p /tmp/openmpi-build \
       && cd /tmp/openmpi-build \
       && MPI_VER_MM="${MPI_VERSION%.*}" \
       && wget http://www.openmpi.org/software/ompi/v${MPI_VER_MM}/downloads/openmpi-${MPI_VERSION}.tar.bz2 \
       && tar xjf openmpi-${MPI_VERSION}.tar.bz2 \
       && cd openmpi-${MPI_VERSION}  \
+      && patch -p1 -i /tmp/0001-OPAL-MCA-BTL-OPENIB-Detect-ConnectX-6-HCAs.patch \
       && ./configure ${MPI_CONFIGURE_OPTIONS} \
       && make ${MPI_MAKE_OPTIONS} \
       && make install \
