@@ -76,6 +76,34 @@ RUN apt-get update -qq \
       && rm -r /var/lib/apt/lists/*
 
 
+ENV GDRVERSION=2.3-1
+ENV GDRARCH=amd64
+ENV GDRPLATFORM=Ubuntu20_04
+RUN apt-get update && \
+    apt-get install -y check libsubunit0 libsubunit-dev && \
+    apt-get install -y build-essential devscripts debhelper check libsubunit-dev fakeroot pkg-config dkms nvidia-dkms-510 && \
+    git clone https://github.com/NVIDIA/gdrcopy.git && \
+    cd gdrcopy/packages && \
+    ln -s /usr/local/cuda/compat/libcuda.so.510.47.03 /usr/local/cuda/lib64/libcuda.so && \
+    CUDA=/usr/local/cuda ./build-deb-packages.sh && \
+    dpkg -i gdrdrv-dkms_${GDRVERSION}_${GDRARCH}.$GDRPLATFORM.deb && \
+    dpkg -i libgdrapi_${GDRVERSION}_${GDRARCH}.$GDRPLATFORM.deb && \
+    dpkg -i gdrcopy-tests_${GDRVERSION}_${GDRARCH}.$GDRPLATFORM+cuda11.6.deb && \
+    dpkg -i gdrcopy_${GDRVERSION}_${GDRARCH}.$GDRPLATFORM.deb
+
+RUN apt-get remove -y ucx && \
+    git clone https://github.com/openucx/ucx.git ucx && \
+    cd ucx && \
+    ./autogen.sh && \
+    mkdir build && \
+    cd build && \
+    ../configure --prefix=/usr/ \
+                 --with-cuda=/usr/local/cuda \
+                 --with-gdrcopy=/usr && \
+    make && \
+    make install && \
+    rm -fr ucx
+
 # Build OPENMPI
 
 ARG MPI_VERSION="4.0.2"
@@ -122,6 +150,8 @@ RUN apt-get update -qq \
       && apt-get clean all \
       && rm -r /var/lib/apt/lists/*
 
+
+RUN echo "soft memlock unlimited\rhard memlock unlimited" > /etc/security/limits.d/rdma.conf
 
 # Final settings
 WORKDIR /
