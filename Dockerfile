@@ -14,10 +14,10 @@ ARG OSU_BUILD_DIR=build.oneapi
 
 COPY licenses /opt/intel/licenses
 
-ENV MOFED_VERSION 4.9-2.2.4.0
+ENV MOFED_VERSION 5.4-3.1.0.0
 ENV OS_VERSION rhel7.7
 ENV PLATFORM x86_64
-RUN cd /tmp/ && yum install -y pciutils numactl-libs gtk2 atk cairo gcc-gfortran tcsh lsof libnl3 libmnl ethtool tcl tk perl make && \
+RUN cd /tmp/ && yum install -y libusbx fuse-libs pciutils numactl-libs gtk2 atk cairo gcc-gfortran tcsh lsof libnl3 libmnl ethtool tcl tk perl make && \
    wget -q http://content.mellanox.com/ofed/MLNX_OFED-${MOFED_VERSION}/MLNX_OFED_LINUX-${MOFED_VERSION}-${OS_VERSION}-${PLATFORM}.tgz && \
    tar -xvf MLNX_OFED_LINUX-${MOFED_VERSION}-${OS_VERSION}-${PLATFORM}.tgz && \
    MLNX_OFED_LINUX-${MOFED_VERSION}-${OS_VERSION}-${PLATFORM}/mlnxofedinstall --user-space-only --without-fw-update -q  --distro rhel7.7 && \
